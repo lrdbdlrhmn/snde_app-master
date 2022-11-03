@@ -4,7 +4,7 @@ import 'package:snde/functions.dart';
 import 'package:snde/services/api_service.dart';
 import 'package:snde/services/auth_service.dart';
 import 'package:snde/widgets/input_decoration_widget.dart';
-import 'package:snde/widgets/input_prefix_icon_widget.dart';
+//import 'package:snde/widgets/input_prefix_icon_widget.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -75,18 +75,22 @@ class RegisterPageState extends State<RegisterPage> {
         //}
       });
       var result = res['result'];
+      var status = result['result']['status'];
+      showToast(t(context, '$status/${status ?? ''}'));
       if (result['result']['status'] == 'ok') {
         AuthService.loginViaHeaderToken(context,
             result['result']['headers']['authorization'], result['result']['result']);
       } else {
-        messages.addEntries((result['result']['message']
-                as Map<dynamic, dynamic>)
-            .entries
-            .map((entry) =>
-                MapEntry('${entry.key}', '${(entry.value as List).first}')));
-        _formKey.currentState!.validate();
+        //messages.addEntries((result['result']['message']
+              //  as Map<dynamic, dynamic>)
+          //  .entries
+            //.map((entry) =>
+            //    MapEntry('${entry.key}', '${(entry.value as List).first}')));
+        //_formKey.currentState!.validate();
+        showToast(t(context, '$_firstName/${_firstName ?? ''}'));
       }
     } catch (error) {
+      showToast(t(context, '$error/${error ?? ''}'));
       if(ApiService.connection){
         showToast(t(context, 'unknown_error'));
       }else{

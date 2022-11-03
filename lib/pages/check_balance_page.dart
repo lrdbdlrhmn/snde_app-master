@@ -1,13 +1,12 @@
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+//import 'dart:convert';
+//import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'package:pdf/pdf.dart';
+import 'package:http/http.dart' as http;
 import 'package:snde/constants.dart';
 import 'package:snde/functions.dart';
 import 'package:snde/services/api_service.dart';
-import 'package:snde/services/auth_service.dart';
-//import 'package:snde/services/pdf_api.dart';
-//import 'package:snde/services/pdf_invoice.dart';
+//import 'package:snde/services/auth_service.dart';
 import 'package:snde/widgets/input_decoration_widget.dart';
 
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
@@ -31,7 +30,7 @@ class CheckBalancePageState extends State<CheckBalancePage> {
   bool _hasPdf = false;
   String name = '';
   String balance = '';
-  PDFDocument? doc;
+  String? doc;
   //String doc = '';
 
   Future<void> _checkBalance() async {
@@ -47,7 +46,7 @@ class CheckBalancePageState extends State<CheckBalancePage> {
     try {
       final res = await apiService.get('check_balance/$_code');
       final result = res['result']['result'];
-      //showToast(t(context, result['status']));
+      
       if (result['status'] != 'ok') {
         
         throw 'no balance';
@@ -58,6 +57,7 @@ class CheckBalancePageState extends State<CheckBalancePage> {
       _gettingBalance = false;
       _showPdf();
     } catch (error) {
+      
        showToast(t(context, 'no_result'));
     }
 
@@ -86,57 +86,39 @@ class CheckBalancePageState extends State<CheckBalancePage> {
 
     try {
       
-      final res = await apiService.get('invoice/$_code');
-      final result = res['result'];
+      //final res = await apiService.get('invoice/$_code');
+      //final result = json.encode(res['result']);
+    Map<String, String> headers = {
+    //'api-key': 'XQd0e4n887CciZnk7h8Puo56sci26ay0cmy8DaRDesixelZvicRBgt2ZsPte',
+    'Authorization': '',
+    //'client-source': 'apis',
+    //'app-v': appVersion,
+    'app-language-x': ApiService.language
+    };
+      http.Response response = await http.get(Uri.parse('$baseUrl/${'invoice/$_code' ?? ''}'), headers: headers);
 
-    
-    //final user = result['user'];
-    //final header_with_details = result['header_with_details'];
-    //final invoice_ref = result['invoice_ref'];
-    /*final data = [
-          '45 25 0 63 - 80001515',
-          'http://www.snde.mr',
-          header_with_details['centre'],
-          header_with_details['dateFact'],
-          user['nom'],
-          invoice_ref,
-          user['abnAdresse'],
-          ]; 
-        List<String> titles_ar = <String>[
-                        //'الشركة الوطنية للماء',
-                        'لإصلاح الأعطاب والاستعلامات الاتصال بالأرقام',
-                        'الموقع الألكترونى',
-                        'شهر الكشف على العداد',
-                        'الزبون',
-                        'عقد الإشتراك',
-                        'العنوان'
-                      ];
-        List<String> titles_fr = <String>[
-                          'Dépannage nuits et jours',
-                          'Site Web',
-                          'Centre',
-                          'Mois de relève',
-                          'Client',
-                          'Réf Abonnement',
-                          'Adresse'
-                  ];
-*/
+      final result = response.body;
+      final codeResponse = response.statusCode;
+      if (codeResponse == 200) {
+        String targetPath = (await getApplicationDocumentsDirectory()).path;
+        //showToast(t(context, '$targetPath/${targetPath ?? ''}'));
+        var targetFileName = '$_code';
+        var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+        result, targetPath, targetFileName);
+        doc = generatedPdfFile.path;
 
+        
+        
+        if (_showingPdfLoading) {
 
-var targetPath = getDownloadsDirectory().toString();
-var targetFileName = '$_code';
+          Navigator.pushNamed(context, '/view_pdf', arguments: doc);
 
-    var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
-    result, targetPath, targetFileName);
-    if (_showingPdfLoading) {
-      //final pdfFile = await PdfInvoice.generate(titles_fr,data,titles_ar);
-      doc = await PDFDocument.fromAsset(generatedPdfFile.path);
-      Navigator.pushNamed(context, '/view_pdf', arguments: doc);
-      //PdfApi.openFile(pdfFile);
+          }
+          _hasPdf = true;
       }
-      _hasPdf = true;
 
     } catch (error) {
+      //showToast(t(context, '$error/${error ?? ''}'));
       showToast(t(context, 'no_result'));
     }
 
@@ -183,6 +165,7 @@ var targetFileName = '$_code';
                                   backgroundColor: MaterialStateProperty.all(Colors.black54),
                                   ),
                               onPressed: _gettingBalance || _showingPdfLoading ? null : _showPdf,
+                              //,
                               child: _showingPdfLoading
                                   ? const CircularProgressIndicator(
                                       color: Colors.white,

@@ -22,7 +22,6 @@ import 'package:snde/pages/register_page.dart';
 import 'package:snde/pages/reports_page.dart';
 import 'package:snde/pages/terms_page.dart';
 import 'package:snde/pages/view_pdf.dart';
-import 'package:snde/pages/invoice_page.dart';
 import 'package:snde/pages/view_report_page.dart';
 import 'package:snde/services/api_service.dart';
 import 'package:snde/services/auth_service.dart';

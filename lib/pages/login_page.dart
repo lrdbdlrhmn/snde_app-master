@@ -38,18 +38,21 @@ class LoginPageState extends State<LoginPage> {
         //}
       });
       
-      var success = result['result']['success'];
-      //showToast(t(context, '$success/${success ?? ''}'));
-      if (result['result']['result']['status'] == 'ok') {
-        //showToast(t(context, '$success/${success ?? ''}'));
+      var success = result['result']['result']['status'];
+      if (success == 'ok') {
+        
+        var authorization = result['result']['result']['headers']['authorization'];
+        var user = result['result']['result']['result'];
+        showToast(t(context, '$authorization/${user ?? ''}'));
         AuthService.loginViaHeaderToken(context,
-            result['result']['result']['headers']['authorization'], result['result']['result']['result']);
+           authorization ,user );
         Navigator.popUntil(context, (route) => route.isFirst);
       }
     } catch (error) {
       //
       if(ApiService.connection){
          showToast(t(context, 'unknown_error'));
+         //showToast(t(context, '$error/${error ?? ''}'));
       }else{
         showToast(t(context, 'check_internet_connection'));
       }

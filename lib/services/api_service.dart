@@ -34,7 +34,7 @@ class ApiService {
     http.Response response = await http.get(_url(url), headers: headers);
 
     final result = json.decode(response.body);
-    return {'result': result};
+    return {'code': response.statusCode,'result': result};
   }
 
   Future<Map<dynamic, dynamic>> delete(String? url) async {
