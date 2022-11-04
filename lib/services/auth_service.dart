@@ -67,17 +67,17 @@ class AuthService extends ChangeNotifier {
 
       Map<dynamic, dynamic> result = await apiService.get('?$filtering');
 
-      //if (result['code'] == 401){
-        //logout();
-        //resetData();
-        //throw 'SERVER ERROR'; 
-      //}
+      if (result['code'] == 401){
+        logout();
+        resetData();
+        throw 'SERVER ERROR'; 
+      }
       if (result['code'] != 200) throw 'SERVER ERROR';
 
       result = result['result']['result'];
       resetData();
 
-      /*if (isNN(result['user'])) {
+      if (isNN(result['user'])) {
         login({
           ...result['user'],
           'access_token': userJson != null
@@ -95,7 +95,6 @@ class AuthService extends ChangeNotifier {
       }else{
         logout();
       }
-*/
       if (isNN(result['cities'])) {
          cities = [];
         result['cities'].forEach((v) => cities.add(City.fromJson(v)));

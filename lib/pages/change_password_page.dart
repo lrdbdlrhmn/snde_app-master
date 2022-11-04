@@ -28,7 +28,7 @@ class ChangePasswordPageState extends State<ChangePasswordPage> {
     });
 
     try {
-      final result = await apiService.put('users/update', body: {
+      final result = await apiService.put('users/update?password=$_password&current_password=$_current_password', body: {
           'password': _password,
           'current_password': _current_password,
       });
@@ -38,6 +38,7 @@ class ChangePasswordPageState extends State<ChangePasswordPage> {
       }
       throw result['result']['error'];
     } catch (error) {
+      showToast(t(context, '$error'));
       if(error == 'invalid_password'){
         showToast(t(context, 'invalid_password'));
       }else if(ApiService.connection){

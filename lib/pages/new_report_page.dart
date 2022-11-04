@@ -83,6 +83,7 @@ class NewReportPageState extends State<NewReportPage> {
         'description': _description,
         'latlng': latlng
       });
+      
       if (result['result']['status'] == 'ok') {
         showToast(t(context, 'new_report.report_sent'), color: Colors.green);
         final r = result['result']['result'];
@@ -104,7 +105,7 @@ class NewReportPageState extends State<NewReportPage> {
         Navigator.popUntil(context, (route) => route.isFirst);
       }
     } catch (error) {
-      showToast(t(context, '$error/${error ?? ''}'));
+      
       print('error:${error}');
       if (!ApiService.connection) {
         storageService.setCacheReport(AuthService.of(context));

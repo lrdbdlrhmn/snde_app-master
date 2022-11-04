@@ -43,7 +43,7 @@ class LoginPageState extends State<LoginPage> {
         
         var authorization = result['result']['result']['headers']['authorization'];
         var user = result['result']['result']['result'];
-        showToast(t(context, '$authorization/${user ?? ''}'));
+        //showToast(t(context, '$authorization/${user ?? ''}'));
         AuthService.loginViaHeaderToken(context,
            authorization ,user );
         Navigator.popUntil(context, (route) => route.isFirst);

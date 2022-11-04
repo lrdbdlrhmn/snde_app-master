@@ -76,7 +76,7 @@ class RegisterPageState extends State<RegisterPage> {
       });
       var result = res['result'];
       var status = result['result']['status'];
-      showToast(t(context, '$status/${status ?? ''}'));
+      //showToast(t(context, '$status/${status ?? ''}'));
       if (result['result']['status'] == 'ok') {
         AuthService.loginViaHeaderToken(context,
             result['result']['headers']['authorization'], result['result']['result']);
@@ -87,10 +87,11 @@ class RegisterPageState extends State<RegisterPage> {
             //.map((entry) =>
             //    MapEntry('${entry.key}', '${(entry.value as List).first}')));
         //_formKey.currentState!.validate();
-        showToast(t(context, '$_firstName/${_firstName ?? ''}'));
+        //showToast(t(context, '$_firstName/${_firstName ?? ''}'));
       }
     } catch (error) {
-      showToast(t(context, '$error/${error ?? ''}'));
+      
+      ///showToast(t(context, '$error/${error ?? ''}'));
       if(ApiService.connection){
         showToast(t(context, 'unknown_error'));
       }else{
