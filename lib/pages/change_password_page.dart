@@ -38,7 +38,7 @@ class ChangePasswordPageState extends State<ChangePasswordPage> {
       }
       throw result['result']['error'];
     } catch (error) {
-      showToast(t(context, '$error'));
+      //showToast(t(context, '$error'));
       if(error == 'invalid_password'){
         showToast(t(context, 'invalid_password'));
       }else if(ApiService.connection){
