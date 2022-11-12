@@ -176,6 +176,23 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
   }
 
+    void delete() {
+    Map<dynamic, dynamic> res;
+    Future<Map<dynamic, dynamic>> result = apiService.delete('delete_account');
+    result.then((value) => {
+      res = value
+    } );
+    
+    prefs?.remove(LOGIN_KEY);
+
+    isAuthenticated = false;
+    ApiService.setAccessToken('');
+
+    user = null;
+
+    notifyListeners();
+  }
+
   void removeNotification(Report? notification) {
     notifications.remove(notification);
     notifyListeners();

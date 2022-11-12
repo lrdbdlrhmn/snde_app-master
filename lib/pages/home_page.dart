@@ -53,13 +53,14 @@ class _HomePageState extends State<HomePage> {
                           width: 200,
                         ),
                         const SizedBox(height: 40),
-                        if (!model.hasData &&
-                            !model.hasError &&
-                            !model.isNotFirst)
-                          ..._loadingWiget()
-                        else if (model.hasError && !model.isNotFirst)
-                          ..._errorWidget(authService: model)
-                        else if (model.isAuthenticated)
+                        ///if (!model.hasData &&
+                            //!model.hasError &&
+                            //!model.isNotFirst)
+                          //..._loadingWiget()
+                        //else if (model.hasError && !model.isNotFirst)
+                          //..._errorWidget(authService: model)
+                        /*else*/
+                        if (model.isAuthenticated)
                           if (model.user!.userType != 'user') ...[
                             FilteringWidget(),
                             const SizedBox(height: 20),
@@ -311,6 +312,14 @@ class _HomePageState extends State<HomePage> {
                         onTap: _logout,
                       ),
                     ],
+                    if (service.isAuthenticated) ...[
+                      const Divider(),
+                      _buildDrawerItem(
+                        icon: FontAwesomeIcons.trash,
+                        text: t(context, 'delete'),
+                        onTap: _delete,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -345,6 +354,11 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
     showAlertDialog(context, t(context, 'confirm'),
         t(context, 'confirm_logout'), AuthService.of(context).logout);
+  }
+  void _delete() {
+    Navigator.pop(context);
+    showAlertDialog(context, t(context, 'confirm'),
+        t(context, 'confirm_delete'), AuthService.of(context).delete);
   }
 
   _shareApp() {

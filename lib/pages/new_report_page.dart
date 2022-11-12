@@ -50,7 +50,7 @@ class NewReportPageState extends State<NewReportPage> {
       image = File(imagePath);
     }
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) => get_user_location());
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) => _getCurrentLocation());
   }
 
   Future<void> _send() async {
@@ -63,11 +63,11 @@ class NewReportPageState extends State<NewReportPage> {
       return;
     }
 
-    if (latlng.isEmpty) {
+    //if (latlng.isEmpty) {
       showToast(t(context, 'new_report.allow_location'));
-      latlng = await get_user_location();
+      latlng = await _getCurrentLocation();
       onChange('latlng', latlng);
-    }
+    //}
 
     setState(() {
       _loading = true;
@@ -347,8 +347,51 @@ class NewReportPageState extends State<NewReportPage> {
     }
     setState(() {});
   }
+  Future<String> _getCurrentLocation() async {
+    try {
+        Position position = await _determinePosition();
+        setState(() {
+          _currentPosition = position;
+        });
+        
+        latlng = "${_currentPosition.latitude},${_currentPosition.longitude}";
+        onChange('latlng', latlng);
+        return latlng;
+    } catch (e) {
+      showToast(t(context, 'unknown_error'));
+      return 'unknown_error';
+      
+    }
+
+
+    
+  }
+  Future<Position> _determinePosition() async {
+        LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+        if (permission == LocationPermission.denied) {
+          permission = await Geolocator.requestPermission();
+          if (permission == LocationPermission.denied) {
+            // Permissions are denied, next time you could try
+            // requesting permissions again (this is also where
+            // Android's shouldShowRequestPermissionRationale
+            // returned true. According to Android guidelines
+            // your App should show an explanatory UI now.
+            return Future.error('Location permissions are denied');
+          }
+        }
+    if (permission == LocationPermission.deniedForever) {
+          // Permissions are denied forever, handle appropriately.
+          return Future.error(
+              'Location permissions are permanently denied, we cannot request permissions.');
+        }
+    // When we reach here, permissions are granted and we can
+        // continue accessing the position of the device.
+        return await Geolocator.getCurrentPosition();
+      }
 
   Future<String> get_user_location() async {
+    //showToast(t(context, 'new_report.allow_location'));
     Geolocator
       .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
       .then((Position position) {
