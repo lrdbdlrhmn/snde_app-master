@@ -9,7 +9,7 @@ const String apiUrl = 'http://41.188.122.141:8083/api';
 const String appVersion = '1.25.0';
 
 const LOGIN_KEY = 'snde_login_key';
-const OSNotificationId = 'ac738a14-efc4-465b-a177-e58f7ab8e1d9';
+const OSNotificationId = '71cb690b-651b-4c68-a127-f380f516f357';
 const String packageName = 'mr.sndeapp.Sighaya';
 const String appId = '12345678';
 const uuid = Uuid();
