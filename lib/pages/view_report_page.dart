@@ -24,6 +24,11 @@ class ViewReportPageState extends State<ViewReportPage> {
 
   bool _inited = false;
   Report? _report;
+  late Map<dynamic, dynamic> res;
+  
+  User? user ;
+  double trust = 0;
+  int total = 0;
   bool _loading = false;
 
   Future<void> _closeReport(String? value) async {
@@ -66,6 +71,7 @@ class ViewReportPageState extends State<ViewReportPage> {
     if (!_inited) {
       _inited = true;
       _report = ModalRoute.of(context)!.settings.arguments as Report;
+      
     }
 
     final AuthService model = AuthService.of(context);
@@ -149,7 +155,7 @@ class ViewReportPageState extends State<ViewReportPage> {
                       padding: const EdgeInsets.all(15),
                       alignment: Alignment.center,
                       child: CachedNetworkImage(
-                        imageUrl: '$baseUrl/images/${_report?.id}',
+                        imageUrl: '$publicUrl/images/${_report?.image}',
                         placeholder: (context, url) => const Center(
                             child: SizedBox(
                                 width: 40,

@@ -1,13 +1,13 @@
 {
     "accept_page": {
         "select_action": "Selectionner l'intervention appropriée",
-        "select_technical": "Choisir l'Agenet",
+        "select_technical": "Choisir l'Agent",
         "report_status_updated": "L'actualisation du status de l'incident a été faite avec succes",
         "signed_to_technical": "La mission a été confiée a l'Agent",
         "report_taken": "Un autre Agent intervient actuellement à l'incident",
         "no_technical": "Aucun Agent trouvé",
         "select": "Selectionner l'intervention appropriée",
-        "choose_technical": "Choisir l'Agenet"
+        "choose_technical": "Choisir l'Agent"
     },
     "new_report": {
         "take_photo": "Merci de prendre une photo de l'incident",

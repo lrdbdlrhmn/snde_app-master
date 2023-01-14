@@ -105,9 +105,10 @@ class NewReportPageState extends State<NewReportPage> {
         Navigator.popUntil(context, (route) => route.isFirst);
       }
     } catch (error) {
-      
+      //showToast(t(context, '$error/${error ?? ''}'));
       print('error:${error}');
       if (!ApiService.connection) {
+        showToast(t(context, '$error/${error ?? ''}'));
         storageService.setCacheReport(AuthService.of(context));
         showToast(t(context, 'report_saved_for_later'), color: Colors.green);
         Navigator.popUntil(context, (route) => route.isFirst);

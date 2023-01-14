@@ -1,5 +1,7 @@
 //import 'dart:convert';
 //import 'dart:io';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -44,15 +46,32 @@ class CheckBalancePageState extends State<CheckBalancePage> {
     });
 
     try {
-      final res = await apiService.get('check_balance/$_code');
-      final result = res['result']['result'];
-      
-      if (result['status'] != 'ok') {
+    String username = 'newsndemobile';
+    String password= 'yKAFP9hmZARNnCm';
+    Map<String, String> headers = {
+    //'api-key': 'XQd0e4n887CciZnk7h8Puo56sci26ay0cmy8DaRDesixelZvicRBgt2ZsPte',
+    'authorization': 'Basic ' + base64.encode(utf8.encode('$username:$password')),
+    //'client-source': 'apis',
+    //'app-v': appVersion, 
+    //'app-language-x': ApiService.language
+    
+    };
+      http.Response response = await http.get(Uri.parse('$apiUrl/get-info-user?vref=$_code'), headers: headers);
+      //final result = response.body;
+      final codeResponse = response.statusCode;
+      if (codeResponse == 200) {
+        final result = json.decode(response.body);
+        /*final res = result['result'];
+        if (res['status'] != 'ok') {
         
-        throw 'no balance';
+            throw 'no balance';
+        }
+        */
+        name = result['nom'];
+        balance = "${result['solde']}";
+
       }
-      name = result['user']['nom'];
-      balance = "${result['user']['solde']}";
+      //final res = await apiService.get('check_balance/$_code');
       _hasBalance = true;
       _gettingBalance = false;
       _showPdf();
@@ -91,11 +110,11 @@ class CheckBalancePageState extends State<CheckBalancePage> {
     Map<String, String> headers = {
     //'api-key': 'XQd0e4n887CciZnk7h8Puo56sci26ay0cmy8DaRDesixelZvicRBgt2ZsPte',
     'Authorization': '',
-    //'client-source': 'apis',
-    //'app-v': appVersion,
+    'client-source': 'apis',
+    'app-v': appVersion,
     'app-language-x': ApiService.language
     };
-      http.Response response = await http.get(Uri.parse('$baseUrl/${'invoice/$_code' ?? ''}'), headers: headers);
+      http.Response response = await http.get(Uri.parse('$bUrl/${'invoice/$_code' ?? ''}'), headers: headers);
 
       final result = response.body;
       final codeResponse = response.statusCode;

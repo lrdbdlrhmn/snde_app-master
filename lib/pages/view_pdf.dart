@@ -14,6 +14,11 @@ class _ViewPdfState extends State<ViewPdf> {
   Widget build(BuildContext context) {
     final doc = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
+      //backgroundColor: Colors.transparent,
+      appBar: AppBar(
+            title: Text('Facture'),
+            centerTitle: true,
+      ),
       body: PDFView(
           filePath: doc,
           enableSwipe: true,

@@ -54,6 +54,7 @@ class _ReportsPageState extends State<ReportsPage> {
     } catch (error) {
       if(ApiService.connection){
         showToast(t(context, 'unknown_error'));
+        //showToast(t(context, '$error'));
       }else{
         showToast(t(context, 'check_internet_connection'));
       }

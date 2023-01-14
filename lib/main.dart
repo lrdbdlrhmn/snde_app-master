@@ -39,7 +39,6 @@ void main() async {
     authService.init();
     storeService.initLanguage();
   } catch (err) {}
-
   OneSignal.shared.setAppId(OSNotificationId);
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   OneSignal.shared.promptLocationPermission();
@@ -62,6 +61,7 @@ void main() async {
       .setSubscriptionObserver((OSSubscriptionStateChanges changes) async {
     AuthService.notificationId = changes.to.userId;
   });
+  
 
   Timer.periodic(const Duration(seconds: 20), (timer) {
     if (authService.isAuthenticated && ApiService.connection) {
@@ -69,7 +69,7 @@ void main() async {
     }
   });
 
-  InternetConnectionChecker().checkInterval = const Duration(seconds: 3);
+  //InternetConnectionChecker().checkInterval = const Duration(seconds: 3);
   var listener = InternetConnectionChecker().onStatusChange.listen((status) {
     switch (status) {
       case InternetConnectionStatus.connected:

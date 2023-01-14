@@ -13,10 +13,10 @@ class ApiService {
   static bool connection = true;
   static String language = 'ar';
   static Map<String, String> headers = {
-    //'api-key': 'XQd0e4n887CciZnk7h8Puo56sci26ay0cmy8DaRDesixelZvicRBgt2ZsPte',
+    'api-key': 'XQd0e4n887CciZnk7h8Puo56sci26ay0cmy8DaRDesixelZvicRBgt2ZsPte',
     'Authorization': '',
-    //'client-source': 'apis',
-    //'app-v': appVersion,
+    'client-source': 'apis',
+    'app-v': appVersion,
     'app-language-x': ApiService.language
   };
 
@@ -78,9 +78,9 @@ class ApiService {
 
     final result = json.decode(response.body);
     return {
-      //'code': response.statusCode,
+      'code': response.statusCode,
       'result': result,
-      //'headers': response.headers
+      'headers': response.headers
     };
   }
 
@@ -98,7 +98,7 @@ class ApiService {
   upload(File imageFile, {String? url, Map<String, String>? body}) async {
     // open a bytestream
     var stream =
-        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+        http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     // get file length
     var length = await imageFile.length();
 
@@ -106,16 +106,17 @@ class ApiService {
     var uri = _url(url);
 
     // create multipart request
-    var request = new http.MultipartRequest("POST", uri);
+    var request = http.MultipartRequest("POST", uri);
 
     // multipart that takes file
-    var multipartFile = new http.MultipartFile('image', stream, length,
+    var multipartFile = http.MultipartFile('image', stream, length,
         filename: basename(imageFile.path));
 
     // add file to multipart
     request.files.add(multipartFile);
     request.fields.addAll(body ?? {});
     request.headers.addAll(headers);
+    print(multipartFile);
 
     // send
     var response = await request.send();

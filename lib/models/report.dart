@@ -10,6 +10,7 @@ class Report {
   String technicalName;
   String phone;
   String userId;
+  String image;
   String description = '';
   String createdAt;
 
@@ -26,7 +27,8 @@ class Report {
       this.technicalName = '',
       this.userId = '',
       this.description = '',
-      this.createdAt = ''});
+      this.createdAt = '',
+      this.image = ''});
 
   Report.fromJson(Map<String, dynamic> region)
       : id = region['id']?.toString() ?? '',
@@ -41,5 +43,6 @@ class Report {
         technicalName = region['technical_name'] ?? '',
         userId = region['user_id']?.toString() ?? '',
         description = region['description'] ?? '',
+        image = region['image'] ?? '',
         createdAt = region['created_at'] ?? '';
 }

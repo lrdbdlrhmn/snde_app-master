@@ -18,8 +18,8 @@ class _PersonInfoPageState extends State<PersonInfoPage> {
   Report? report;
   bool loading = false;
   bool inited = false;
-  int total = 0;
-  double trust = 0;
+  var total = 0;
+  var trust = 0;
 
   init() async {
     setState(() {
@@ -27,12 +27,15 @@ class _PersonInfoPageState extends State<PersonInfoPage> {
     });
 
     try {
+      
       final result = await apiService.get('users/${report!.userId}');
 
       user = User.fromJson(result['result']['user']);
-      total = int.parse(result['result']['total']);
-      trust = double.parse(result['result']['trust']);
+      total = result['result']['total'];
+      trust = result['result']['trust'];
+      
     } catch (error) {
+      //showToast(t(context, '$error'));
       if (ApiService.connection) {
         showToast(t(context, 'unknown_error'));
       } else {
@@ -51,6 +54,7 @@ class _PersonInfoPageState extends State<PersonInfoPage> {
     if (!inited) {
       inited = true;
       report = ModalRoute.of(context)!.settings.arguments as Report;
+      init();
     }
     return Scaffold(
       appBar: AppBar(title: Text(report!.firstName), centerTitle: true),
