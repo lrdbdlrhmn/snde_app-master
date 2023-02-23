@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+//import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snde/constants.dart';
 import 'package:snde/pages/accept_page.dart';
@@ -31,6 +33,7 @@ import 'package:snde/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await init();
   final AuthService authService = AuthService();
   final StoreService storeService = StoreService();
   try {
@@ -38,38 +41,41 @@ void main() async {
     await authService.firstInit();
     authService.init();
     storeService.initLanguage();
+    
   } catch (err) {}
-  OneSignal.shared.setAppId(OSNotificationId);
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  OneSignal.shared.promptLocationPermission();
-  OneSignal.shared
-      .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
-    AuthService.notificationId = changes.to.userId;
-  });
-  OneSignal.shared.getDeviceState().then((value) {
-    AuthService.notificationId = value!.userId;
-  });
+  
+  //OneSignal.shared.setAppId(OSNotificationId);
+  //OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  //OneSignal.shared.promptLocationPermission();
+  //OneSignal.shared
+    //  .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+    //AuthService.notificationId = changes.to.userId;
+  //});
+  //OneSignal.shared.getDeviceState().then((value) {
+    //AuthService.notificationId = value!.userId;
+  //});
 
-  OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
+  //OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
     // event.notification.additionalData['new_report'];
-    if(authService.user?.userType == 'manager'){
-      authService.init(refresh: true);
-    }
-  });
+    //if(authService.user?.userType == 'manager'){
+      //authService.init(refresh: true);
+    //}
+  //});
 
-  OneSignal.shared
-      .setSubscriptionObserver((OSSubscriptionStateChanges changes) async {
-    AuthService.notificationId = changes.to.userId;
-  });
+  //OneSignal.shared
+    //  .setSubscriptionObserver((OSSubscriptionStateChanges changes) async {
+    //AuthService.notificationId = changes.to.userId;
+  //});
   
 
-  Timer.periodic(const Duration(seconds: 20), (timer) {
-    if (authService.isAuthenticated && ApiService.connection) {
-      authService.init(autoReload: true);
-    }
-  });
+  ///Timer.periodic(const Duration(seconds: 20), (timer) {
+    //if (authService.isAuthenticated && ApiService.connection) {
+      //authService.init(autoReload: true);
+    //}
+  //});
 
   //InternetConnectionChecker().checkInterval = const Duration(seconds: 3);
+  AuthService.notificationId = await FirebaseMessaging.instance.getToken();
   var listener = InternetConnectionChecker().onStatusChange.listen((status) {
     switch (status) {
       case InternetConnectionStatus.connected:
@@ -89,7 +95,9 @@ void main() async {
 
   runApp(SndeApp(authService: authService, storeService: storeService));
 }
-
+Future init() async {
+  await Firebase.initializeApp();
+}
 class SndeApp extends StatelessWidget {
   final AuthService authService;
   final StoreService storeService;

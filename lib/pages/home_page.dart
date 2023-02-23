@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:launch_review/launch_review.dart';
@@ -13,6 +14,7 @@ import 'package:snde/models/region.dart';
 import 'package:snde/models/report.dart';
 import 'package:snde/services/api_service.dart';
 import 'package:snde/services/auth_service.dart';
+import 'package:snde/services/notification_service.dart';
 import 'package:snde/theme.dart';
 import 'package:snde/widgets/filtering_widget.dart';
 import 'package:snde/widgets/input_decoration_widget.dart';
@@ -27,6 +29,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+    String notificationTitle = 'No Title';
+  String notificationBody = 'No Body';
+  String notificationData = 'No Data';
+  
+  @override
+  void initState() {
+    final firebaseMessaging = FCM();
+    firebaseMessaging.setNotifications();
+    
+    firebaseMessaging.streamCtlr.stream.listen(_changeData);
+    firebaseMessaging.bodyCtlr.stream.listen(_changeBody);
+    firebaseMessaging.titleCtlr.stream.listen(_changeTitle);
+    
+    super.initState();
+  }
+
+  _changeData(String msg) => setState(() => notificationData = msg);
+  _changeBody(String msg) => setState(() => notificationBody = msg);
+  _changeTitle(String msg) => setState(() => notificationTitle = msg);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -53,12 +74,13 @@ class _HomePageState extends State<HomePage> {
                           width: 200,
                         ),
                         const SizedBox(height: 40),
+
                         ///if (!model.hasData &&
-                            //!model.hasError &&
-                            //!model.isNotFirst)
-                          //..._loadingWiget()
+                        //!model.hasError &&
+                        //!model.isNotFirst)
+                        //..._loadingWiget()
                         //else if (model.hasError && !model.isNotFirst)
-                          //..._errorWidget(authService: model)
+                        //..._errorWidget(authService: model)
                         /*else*/
                         if (model.isAuthenticated)
                           if (model.user!.userType != 'user') ...[
@@ -257,15 +279,15 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => Navigator.of(context)
                             .popAndPushNamed('/my_reports'),
                       ),
-                      
+
                       const Divider(),
                       _buildDrawerItem(
                         icon: FontAwesomeIcons.creditCard,
                         text: t(context, 'check_balance'),
-                        onTap: () => Navigator.of(context)
-                            .popAndPushNamed('/balance'),
+                        onTap: () =>
+                            Navigator.of(context).popAndPushNamed('/balance'),
                       ),
-                      
+
                       const Divider(),
                       _buildDrawerItem(
                         icon: FontAwesomeIcons.exclamationTriangle,
@@ -274,10 +296,10 @@ class _HomePageState extends State<HomePage> {
                             .popAndPushNamed('/new_report'),
                       ),
                       //  icon: FaIcon(FontAwesomeIcons.creditCard),
-          // onPressed: () => Navigator.of(context).pushNamed('/balance'),
-          // label: Text(t(context, 'check_balance')),
-          //  onPressed: () => Navigator.of(context).pushNamed('/new_report'),
-          // label: Text(t(context, 'report_problem')),
+                      // onPressed: () => Navigator.of(context).pushNamed('/balance'),
+                      // label: Text(t(context, 'check_balance')),
+                      //  onPressed: () => Navigator.of(context).pushNamed('/new_report'),
+                      // label: Text(t(context, 'report_problem')),
                       const Divider(),
                     ],
                     _buildDrawerItem(
@@ -355,6 +377,7 @@ class _HomePageState extends State<HomePage> {
     showAlertDialog(context, t(context, 'confirm'),
         t(context, 'confirm_logout'), AuthService.of(context).logout);
   }
+
   void _delete() {
     Navigator.pop(context);
     showAlertDialog(context, t(context, 'confirm'),
