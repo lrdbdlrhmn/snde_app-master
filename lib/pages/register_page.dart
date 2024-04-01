@@ -74,9 +74,10 @@ class RegisterPageState extends State<RegisterPage> {
           'notification_id': AuthService.notificationId ?? ''
         //}
       });
+      
       var result = res['result'];
       var status = result['result']['status'];
-      //showToast(t(context, '$status/${status ?? ''}'));
+      showToast(t(context, '$result/${status ?? ''}'));
       if (result['result']['status'] == 'ok') {
         AuthService.loginViaHeaderToken(context,
             result['result']['headers']['authorization'], result['result']['result']);
@@ -91,7 +92,7 @@ class RegisterPageState extends State<RegisterPage> {
       }
     } catch (error) {
       
-      ///showToast(t(context, '$error/${error ?? ''}'));
+      showToast(t(context, '$error'));
       if(ApiService.connection){
         showToast(t(context, 'unknown_error'));
       }else{

@@ -44,31 +44,11 @@ void main() async {
     
   } catch (err) {}
   
-  //OneSignal.shared.setAppId(OSNotificationId);
-  //OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  //OneSignal.shared.promptLocationPermission();
-  //OneSignal.shared
-    //  .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
-    //AuthService.notificationId = changes.to.userId;
-  //});
-  //OneSignal.shared.getDeviceState().then((value) {
-    //AuthService.notificationId = value!.userId;
-  //});
 
-  //OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
-    // event.notification.additionalData['new_report'];
-    //if(authService.user?.userType == 'manager'){
-      //authService.init(refresh: true);
-    //}
-  //});
 
-  //OneSignal.shared
-    //  .setSubscriptionObserver((OSSubscriptionStateChanges changes) async {
-    //AuthService.notificationId = changes.to.userId;
-  //});
   
 
-  ///Timer.periodic(const Duration(seconds: 20), (timer) {
+  //Timer.periodic(const Duration(seconds: 20), (timer) {
     //if (authService.isAuthenticated && ApiService.connection) {
       //authService.init(autoReload: true);
     //}
@@ -148,7 +128,7 @@ class SndeApp extends StatelessWidget {
               '/change_language': (context) => const ChangeLanguagePage(),
               '/my_account': (context) => const AccountPage(),
               '/person_info': (context) => const PersonInfoPage(),
-              '/view_pdf': (context) => ViewPdf(),
+              //'/view_pdf': (context) => ViewPdf(),
               //'/view_invoice': (context) => PdfInvoice(),
               '/change_password': (context) => const ChangePasswordPage(),
               '/forgot_password': (context) => const ForgotPasswordPage(),

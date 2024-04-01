@@ -53,7 +53,7 @@ showAlertDialog(
 }
 
 
-Future<File?> compressAndGetFile(File file) async {
+Future<XFile?> compressAndGetFile(File file) async {
   Directory appDir = await getApplicationDocumentsDirectory(); 
   String filePath = file.absolute.path; 
   final outPath = "${appDir.absolute.path}/${filePath.split('/').last}";

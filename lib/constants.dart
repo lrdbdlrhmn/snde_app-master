@@ -1,15 +1,12 @@
-// const String baseUrl = 'http://955f-178-79-155-200.ngrok.io';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'http://sighaya-snde.net/sighaya/api';
-const String bUrl = 'http://iset.mr/snde_apis/public/api';
+const String baseUrl = 'http://snde.mr:8000/api';
+const String publicUrl = 'http://snde.mr:8000';
 
-const String publicUrl = 'http://sighaya-snde.net/sighaya/public';
-const String apiUrl = 'http://41.188.122.141:8083/api';
 const String appVersion = '1.25.0';
 
 const LOGIN_KEY = 'snde_login_key';
-//const OSNotificationId = 'ac738a14-efc4-465b-a177-e58f7ab8e1d9';
+
 const String packageName = 'mr.sndeapp.Sighaya';
 const String appId = '12345678';
 const uuid = Uuid();

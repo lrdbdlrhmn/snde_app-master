@@ -74,9 +74,9 @@ class AcceptPageState extends State<AcceptPage> {
         throw result['result']['message'];
       }
     } catch (error) {
-      print('error ${error}');
+
       showToast(t(context, 'unknown_error'));
-      showToast(t(context, '${error}'));
+
     }
     setState(() {
       _loading = false;

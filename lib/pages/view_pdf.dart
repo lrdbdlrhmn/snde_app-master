@@ -1,9 +1,14 @@
-//import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-//import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+
+
 class ViewPdf extends StatefulWidget {
-  ViewPdf({Key? key}) : super(key: key);
+  final String pdfPath;
+  final String pageTitle;
+
+  ViewPdf({Key? key, required this.pdfPath, required this.pageTitle})
+      : super(key: key);
 
   @override
   _ViewPdfState createState() => _ViewPdfState();
@@ -11,36 +16,26 @@ class ViewPdf extends StatefulWidget {
 
 class _ViewPdfState extends State<ViewPdf> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.pdfPath);
+    print(widget.pageTitle);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final doc = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
-      //backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-            title: Text('Facture'),
-            centerTitle: true,
+        title: Text(widget.pageTitle),centerTitle : true,
       ),
-      body: PDFView(
-          filePath: doc,
-          enableSwipe: true,
-          swipeHorizontal: true,
-          autoSpacing: false,
-          pageFling: false,
-          onRender: (_pages) {
-            setState(() {
-              //pages = _pages;
-              //isReady = true;
-            });
-          },
-          onError: (error) {
-            print(error.toString());
-          },
-          onPageError: (page, error) {
-            print('$page: ${error.toString()}');
-          },
-          onViewCreated: (PDFViewController pdfViewController) {
-            //_controller.complete(pdfViewController);
-          },
-        ),
+      body: widget.pdfPath.isEmpty ? const CircularProgressIndicator() : PDFView(
+        filePath: widget.pdfPath,
+        onError: (error) {
+          print(error);
+        },
+      ),
     );
   }
 }

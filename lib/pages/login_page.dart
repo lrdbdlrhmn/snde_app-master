@@ -37,13 +37,14 @@ class LoginPageState extends State<LoginPage> {
           'notification_id': AuthService.notificationId ?? ''
         //}
       });
+
       
       var success = result['result']['result']['status'];
+
       if (success == 'ok') {
-        
         var authorization = result['result']['result']['headers']['authorization'];
         var user = result['result']['result']['result'];
-        //showToast(t(context, '$authorization/${user ?? ''}'));
+
         AuthService.loginViaHeaderToken(context,
            authorization ,user );
         Navigator.popUntil(context, (route) => route.isFirst);
@@ -52,10 +53,11 @@ class LoginPageState extends State<LoginPage> {
       //
       if(ApiService.connection){
          showToast(t(context, 'unknown_error'));
-         //showToast(t(context, '$error/${error ?? ''}'));
+
       }else{
         showToast(t(context, 'check_internet_connection'));
       }
+
     }
 
     setState(() {

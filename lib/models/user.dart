@@ -15,17 +15,17 @@ class User {
 
   User(
       {this.id = '',
-      this.firstName = '',
-      this.lastName = '',
-      this.phone = '',
-      this.email = '',
-      this.whatsapp = '',
-      this.nni = 0,
-      this.stateId = 0,
-      this.cityId = 0,
-      this.regionId = 0,
-      this.userType = '',
-      this.accessToken = ''});
+        this.firstName = '',
+        this.lastName = '',
+        this.phone = '',
+        this.email = '',
+        this.whatsapp = '',
+        this.nni = 0,
+        this.stateId = 0,
+        this.cityId = 0,
+        this.regionId = 0,
+        this.userType = '',
+        this.accessToken = ''});
 
   User.fromJson(Map<dynamic, dynamic> user)
       : id = '${user['id']}',
@@ -42,17 +42,17 @@ class User {
         accessToken = user['access_token'] ?? '';
 
   Map<String, String> get toJson => {
-        'id': id,
-        'first_name': firstName,
-        'last_name': lastName,
-        'phone': phone,
-        'email': email,
-        'whatsapp': whatsapp,
-        'nni': '$nni',
-        'state_id': '$stateId',
-        'city_id': '$cityId',
-        'region_id': '$stateId',
-        'user_type': userType,
-        'access_token': accessToken,
-      };
+    'id': id,
+    'first_name': firstName,
+    'last_name': lastName,
+    'phone': phone,
+    'email': email,
+    'whatsapp': whatsapp,
+    'nni': '$nni',
+    'state_id': '$stateId',
+    'city_id': '$cityId',
+    'region_id': '$stateId',
+    'user_type': userType,
+    'access_token': accessToken,
+  };
 }

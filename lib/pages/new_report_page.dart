@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:geolocator/geolocator.dart';
 import 'package:active_storage/active_storage.dart';
@@ -33,7 +34,7 @@ class NewReportPageState extends State<NewReportPage> {
   String? _regionId;
   String _description = '';
   String latlng = '';
-  File? image;
+  XFile? image;
   bool _loading = false;
   late Position _currentPosition;
   @override
@@ -47,7 +48,7 @@ class NewReportPageState extends State<NewReportPage> {
     latlng = storageService.newReportItem(report, 'latlng') ?? '';
     String imagePath = storageService.newReportItem(report, 'image') ?? '';
     if (imagePath.isNotEmpty) {
-      image = File(imagePath);
+      image = XFile(imagePath);
     }
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) => _getCurrentLocation());
@@ -63,11 +64,11 @@ class NewReportPageState extends State<NewReportPage> {
       return;
     }
 
-    //if (latlng.isEmpty) {
+    if (latlng.isEmpty) {
       showToast(t(context, 'new_report.allow_location'));
       latlng = await _getCurrentLocation();
       onChange('latlng', latlng);
-    //}
+    }
 
     setState(() {
       _loading = true;
@@ -105,10 +106,10 @@ class NewReportPageState extends State<NewReportPage> {
         Navigator.popUntil(context, (route) => route.isFirst);
       }
     } catch (error) {
-      //showToast(t(context, '$error/${error ?? ''}'));
-      print('error:${error}');
+
+
       if (!ApiService.connection) {
-        showToast(t(context, '$error/${error ?? ''}'));
+
         storageService.setCacheReport(AuthService.of(context));
         showToast(t(context, 'report_saved_for_later'), color: Colors.green);
         Navigator.popUntil(context, (route) => route.isFirst);
