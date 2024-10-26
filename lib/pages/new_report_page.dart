@@ -17,7 +17,6 @@ import 'package:snde/services/auth_service.dart';
 import 'package:snde/services/storage_service.dart';
 import 'package:snde/services/store_service.dart';
 import 'package:snde/widgets/input_decoration_widget.dart';
-// import 'package:location/location.dart';
 
 class NewReportPage extends StatefulWidget {
   const NewReportPage({Key? key}) : super(key: key);
@@ -37,6 +36,7 @@ class NewReportPageState extends State<NewReportPage> {
   XFile? image;
   bool _loading = false;
   late Position _currentPosition;
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +51,28 @@ class NewReportPageState extends State<NewReportPage> {
       image = XFile(imagePath);
     }
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) => _getCurrentLocation());
+    WidgetsBinding.instance
+        ?.addPostFrameCallback((timeStamp) => _getCurrentLocation());
+  }
+
+  void _onLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        );
+      },
+    );
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pop(context); //pop dialog
+      _send();
+    });
   }
 
   Future<void> _send() async {
@@ -84,7 +105,7 @@ class NewReportPageState extends State<NewReportPage> {
         'description': _description,
         'latlng': latlng
       });
-      
+
       if (result['result']['status'] == 'ok') {
         showToast(t(context, 'new_report.report_sent'), color: Colors.green);
         final r = result['result']['result'];
@@ -106,10 +127,9 @@ class NewReportPageState extends State<NewReportPage> {
         Navigator.popUntil(context, (route) => route.isFirst);
       }
     } catch (error) {
-
+      print(error);
 
       if (!ApiService.connection) {
-
         storageService.setCacheReport(AuthService.of(context));
         showToast(t(context, 'report_saved_for_later'), color: Colors.green);
         Navigator.popUntil(context, (route) => route.isFirst);
@@ -317,7 +337,7 @@ class NewReportPageState extends State<NewReportPage> {
                             child: ElevatedButton(
                               style: ButtonStyle(
                                   elevation: MaterialStateProperty.all(0)),
-                              onPressed: _loading ? null : _send,
+                              onPressed: _loading ? null : _onLoading,
                               child: _loading
                                   ? const CircularProgressIndicator(
                                       color: Colors.white,
@@ -349,65 +369,61 @@ class NewReportPageState extends State<NewReportPage> {
     }
     setState(() {});
   }
+
   Future<String> _getCurrentLocation() async {
     try {
-        Position position = await _determinePosition();
-        setState(() {
-          _currentPosition = position;
-        });
-        
-        latlng = "${_currentPosition.latitude},${_currentPosition.longitude}";
-        onChange('latlng', latlng);
-        return latlng;
+      Position position = await _determinePosition();
+      setState(() {
+        _currentPosition = position;
+      });
+
+      latlng = "${_currentPosition.latitude},${_currentPosition.longitude}";
+      onChange('latlng', latlng);
+      return latlng;
     } catch (e) {
       showToast(t(context, 'unknown_error'));
       return 'unknown_error';
-      
     }
-
-
-    
   }
+
   Future<Position> _determinePosition() async {
-        LocationPermission permission;
+    LocationPermission permission;
     permission = await Geolocator.checkPermission();
-        if (permission == LocationPermission.denied) {
-          permission = await Geolocator.requestPermission();
-          if (permission == LocationPermission.denied) {
-            // Permissions are denied, next time you could try
-            // requesting permissions again (this is also where
-            // Android's shouldShowRequestPermissionRationale
-            // returned true. According to Android guidelines
-            // your App should show an explanatory UI now.
-            return Future.error('Location permissions are denied');
-          }
-        }
-    if (permission == LocationPermission.deniedForever) {
-          // Permissions are denied forever, handle appropriately.
-          return Future.error(
-              'Location permissions are permanently denied, we cannot request permissions.');
-        }
-    // When we reach here, permissions are granted and we can
-        // continue accessing the position of the device.
-        return await Geolocator.getCurrentPosition();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
       }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
 
   Future<String> get_user_location() async {
-    //showToast(t(context, 'new_report.allow_location'));
-    Geolocator
-      .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
-      .then((Position position) {
-        setState(() {
-          _currentPosition = position;
-        });
-
-          latlng = "${_currentPosition.latitude},${_currentPosition.longitude}";
-      onChange('latlng', latlng);
-
-      }).catchError((e) {
-        print(e);
-
+    Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
       });
+
+      latlng = "${_currentPosition.latitude},${_currentPosition.longitude}";
+      onChange('latlng', latlng);
+    }).catchError((e) {
+      print(e);
+    });
     return latlng;
   }
 

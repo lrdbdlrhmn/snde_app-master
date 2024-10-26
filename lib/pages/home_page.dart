@@ -23,6 +23,7 @@ import 'package:snde/widgets/report_widget.dart';
 
 class HomePage extends StatefulWidget {
   final AuthService authService;
+
   const HomePage({Key? key, required this.authService}) : super(key: key);
 
   @override
@@ -30,39 +31,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-    String notificationTitle = 'No Title';
+  String notificationTitle = 'No Title';
   String notificationBody = 'No Body';
   String notificationData = 'No Data';
-
 
   @override
   void initState() {
     final firebaseMessaging = FCM();
     firebaseMessaging.setNotifications();
-    
+
     firebaseMessaging.streamCtlr.stream.listen(_changeData);
     firebaseMessaging.bodyCtlr.stream.listen(_changeBody);
     firebaseMessaging.titleCtlr.stream.listen(_changeTitle);
-    
+
     super.initState();
   }
 
   _changeData(String msg) => setState(() => notificationData = msg);
+
   _changeBody(String msg) => setState(() => notificationBody = msg);
+
   _changeTitle(String msg) => setState(() => notificationTitle = msg);
 
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
-
-    GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-
-
-
-    void showSnack(String text) {
-      if (_scaffoldKey.currentContext != null) {
-        ScaffoldMessenger.of(_scaffoldKey.currentContext!)
-            .showSnackBar(SnackBar(content: Text(text)));
-      }
+  void showSnack(String text) {
+    if (_scaffoldKey.currentContext != null) {
+      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+          .showSnackBar(SnackBar(content: Text(text)));
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,14 +88,6 @@ class _HomePageState extends State<HomePage> {
                           width: 200,
                         ),
                         const SizedBox(height: 40),
-
-                        if (!model.hasData &&
-                        !model.hasError &&
-                        !model.isNotFirst)
-                        ..._loadingWiget()
-                        else if (model.hasError && !model.isNotFirst)
-                        ..._errorWidget(authService: model)
-                        else
                         if (model.isAuthenticated)
                           if (model.user!.userType != 'user') ...[
                             FilteringWidget(),

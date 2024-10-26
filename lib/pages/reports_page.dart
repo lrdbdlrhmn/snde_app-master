@@ -52,10 +52,10 @@ class _ReportsPageState extends State<ReportsPage> {
       reports = [];
       storageService.setReports(result['result']['reports']);
     } catch (error) {
-      print(error);
+
       if(ApiService.connection){
         showToast(t(context, 'unknown_error'));
-        //showToast(t(context, '$error'));
+
       }else{
         showToast(t(context, 'check_internet_connection'));
       }

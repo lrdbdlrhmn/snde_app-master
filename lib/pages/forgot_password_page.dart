@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:snde/functions.dart';
 import 'package:snde/services/api_service.dart';
-import 'package:snde/services/auth_service.dart';
 import 'package:snde/widgets/input_decoration_widget.dart';
 
 class ForgotPasswordPage extends StatefulWidget {

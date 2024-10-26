@@ -33,7 +33,8 @@ class RegisterPageState extends State<RegisterPage> {
       return;
     }
     if (_password != _passwordConfirm) {
-      messages['confirm_password'] = t(context, 'register_page.passwords_not_equal');
+      messages['confirm_password'] =
+          t(context, 'register_page.passwords_not_equal');
       _formKey.currentState!.validate();
       return;
     }
@@ -64,38 +65,37 @@ class RegisterPageState extends State<RegisterPage> {
     try {
       final res = await apiService.post('register', body: {
         //'user': {
-          'first_name': _firstName,
-          'last_name': _lastName,
-          'phone': _phone,
-          'email': _email,
-          'whatsapp': _whatsapp,
-          'nni': _nni,
-          'password': _password,
-          'notification_id': AuthService.notificationId ?? ''
+        'first_name': _firstName,
+        'last_name': _lastName,
+        'phone': _phone,
+        'email': _email,
+        'whatsapp': _whatsapp,
+        'nni': _nni,
+        'password': _password,
+        'notification_id': AuthService.notificationId ?? ''
         //}
       });
-      
+
       var result = res['result'];
       var status = result['result']['status'];
-      showToast(t(context, '$result/${status ?? ''}'));
+
       if (result['result']['status'] == 'ok') {
-        AuthService.loginViaHeaderToken(context,
-            result['result']['headers']['authorization'], result['result']['result']);
+        AuthService.loginViaHeaderToken(
+            context,
+            result['result']['headers']['authorization'],
+            result['result']['result']);
       } else {
-        //messages.addEntries((result['result']['message']
-              //  as Map<dynamic, dynamic>)
-          //  .entries
-            //.map((entry) =>
-            //    MapEntry('${entry.key}', '${(entry.value as List).first}')));
-        //_formKey.currentState!.validate();
-        //showToast(t(context, '$_firstName/${_firstName ?? ''}'));
+        messages.addEntries((result['result']['message']
+                as Map<dynamic, dynamic>)
+            .entries
+            .map((entry) =>
+                MapEntry('${entry.key}', '${(entry.value as List).first}')));
+        _formKey.currentState!.validate();
       }
     } catch (error) {
-      
-      showToast(t(context, '$error'));
-      if(ApiService.connection){
+      if (ApiService.connection) {
         showToast(t(context, 'unknown_error'));
-      }else{
+      } else {
         showToast(t(context, 'check_internet_connection'));
       }
     }
@@ -130,13 +130,15 @@ class RegisterPageState extends State<RegisterPage> {
                       children: [
                         TextFormField(
                           decoration: inputDecorationWidget(
-                              text: t(context, 'name'), icon: FontAwesomeIcons.userCircle),
+                              text: t(context, 'name'),
+                              icon: FontAwesomeIcons.userCircle),
                           onChanged: (value) => setState(() {
                             _firstName = value;
                           }),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return t(context, 'register_page.enter_first_name');
+                              return t(
+                                  context, 'register_page.enter_first_name');
                             }
                             return null;
                           },
@@ -151,7 +153,8 @@ class RegisterPageState extends State<RegisterPage> {
                           }),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return t(context, 'register_page.enter_last_name');
+                              return t(
+                                  context, 'register_page.enter_last_name');
                             }
                             return null;
                           },
@@ -159,7 +162,8 @@ class RegisterPageState extends State<RegisterPage> {
                         SizedBox(height: 10),
                         TextFormField(
                           decoration: inputDecorationWidget(
-                              text: t(context, 'phone'), icon: FontAwesomeIcons.phone),
+                              text: t(context, 'phone'),
+                              icon: FontAwesomeIcons.phone),
                           keyboardType: TextInputType.phone,
                           onChanged: (value) => setState(() {
                             _phone = value;
@@ -222,7 +226,8 @@ class RegisterPageState extends State<RegisterPage> {
                         SizedBox(height: 10),
                         TextFormField(
                           decoration: inputDecorationWidget(
-                              text: t(context, 'password'), icon: FontAwesomeIcons.lock),
+                              text: t(context, 'password'),
+                              icon: FontAwesomeIcons.lock),
                           onChanged: (value) => setState(() {
                             _password = value;
                           }),
@@ -250,7 +255,8 @@ class RegisterPageState extends State<RegisterPage> {
                           keyboardType: TextInputType.visiblePassword,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return t(context, 'register_page.enter_confirm_password');
+                              return t(context,
+                                  'register_page.enter_confirm_password');
                             }
 
                             if (messages.containsKey('confirm_password')) {

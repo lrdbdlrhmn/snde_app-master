@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-//import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:snde/constants.dart';
 import 'package:snde/pages/accept_page.dart';
 import 'package:snde/pages/account_page.dart';
 import 'package:snde/pages/change_language_page.dart';
@@ -48,13 +46,13 @@ void main() async {
 
   
 
-  //Timer.periodic(const Duration(seconds: 20), (timer) {
-    //if (authService.isAuthenticated && ApiService.connection) {
-      //authService.init(autoReload: true);
-    //}
-  //});
+  Timer.periodic(const Duration(seconds: 20), (timer) {
+    if (authService.isAuthenticated && ApiService.connection) {
+      authService.init(autoReload: true);
+    }
+  });
 
-  //InternetConnectionChecker().checkInterval = const Duration(seconds: 3);
+  //InternetConnectionChecker().checkInterval() = const Duration(seconds: 3);
   AuthService.notificationId = await FirebaseMessaging.instance.getToken();
   var listener = InternetConnectionChecker().onStatusChange.listen((status) {
     switch (status) {
@@ -128,8 +126,6 @@ class SndeApp extends StatelessWidget {
               '/change_language': (context) => const ChangeLanguagePage(),
               '/my_account': (context) => const AccountPage(),
               '/person_info': (context) => const PersonInfoPage(),
-              //'/view_pdf': (context) => ViewPdf(),
-              //'/view_invoice': (context) => PdfInvoice(),
               '/change_password': (context) => const ChangePasswordPage(),
               '/forgot_password': (context) => const ForgotPasswordPage(),
             },

@@ -35,7 +35,7 @@ class _PersonInfoPageState extends State<PersonInfoPage> {
       trust = result['result']['trust'];
       
     } catch (error) {
-      //showToast(t(context, '$error'));
+
       if (ApiService.connection) {
         showToast(t(context, 'unknown_error'));
       } else {

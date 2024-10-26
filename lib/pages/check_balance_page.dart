@@ -101,29 +101,31 @@ class CheckBalancePageState extends State<CheckBalancePage> {
 
     try {
       _html = await fetchHTML();
+      if (_html.isNotEmpty) {
+        Directory? appDocDir = await getDownloadsDirectory();
+        final targetPath = appDocDir?.path;
+        final targetFileName = _code;
 
-      Directory? appDocDir = await getDownloadsDirectory();
-      final targetPath = appDocDir?.path;
-      final targetFileName = _code;
+        final generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+            _html, targetPath!, targetFileName);
+        doc = generatedPdfFile.path;
 
-      final generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
-          _html, targetPath!, targetFileName);
-      doc = generatedPdfFile.path;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewPdf(
+                pdfPath: doc,
+                pageTitle: name,
+              ),
+            ));
+      } else {
+        showToast(t(context, 'no_result'));
+      }
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ViewPdf(
-              pdfPath: doc,
-              pageTitle: name,
-            ),
-          ));
       if (_showingPdfLoading) {}
       _hasPdf = true;
     } catch (error) {
-
       showToast(t(context, 'no_result'));
-
     }
 
     setState(() {
